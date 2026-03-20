@@ -27,7 +27,19 @@
             overflow: hidden; /* Naka-lock hanggang sa mabuksan */
         }
 
-        /* Entry Overlay Styles - Katulad ng nasa picture */
+        /* Heart Particles Canvas */
+        #heartCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Sa likod ng lahat */
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Entry Overlay Styles */
         #overlay {
             position: fixed;
             top: 0;
@@ -155,6 +167,8 @@
             margin-bottom: 40px;
             box-shadow: 0 10px 30px rgba(58, 58, 58, 0.05);
             border: 1px solid rgba(229, 154, 143, 0.2);
+            position: relative;
+            z-index: 10;
         }
 
         .music-icon {
@@ -182,6 +196,8 @@
             border-radius: 30px;
             box-shadow: 0 20px 50px rgba(58, 58, 58, 0.05);
             margin-bottom: 60px;
+            position: relative;
+            z-index: 10;
         }
 
         .letter-text {
@@ -206,7 +222,10 @@
 </head>
 <body>
 
-    <!-- Enter Overlay - Message Icon na ang gamit -->
+    <!-- Heart Particles Background -->
+    <canvas id="heartCanvas"></canvas>
+
+    <!-- Enter Overlay -->
     <div id="overlay">
         <div class="surprise-card">
             <div class="message-logo">
@@ -261,6 +280,94 @@ I love you love ^^ ingatan mo palagi sarili mo🥺</div>
         const audio = document.getElementById('bgMusic');
         const overlay = document.getElementById('overlay');
         const body = document.body;
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Particle System
+        let hearts = [];
+        const heartCount = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Heart {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 15 + 5;
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                this.wind = (Math.random() - 0.5) * 0.5;
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.x += this.wind;
+                if (this.y < -20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(229, 154, 143, ${this.opacity})`;
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(this.x, this.y + topCurveHeight);
+                // Top left curve
+                ctx.bezierCurveTo(
+                    this.x, this.y, 
+                    this.x - this.size / 2, this.y, 
+                    this.x - this.size / 2, this.y + topCurveHeight
+                );
+                // Bottom left curve
+                ctx.bezierCurveTo(
+                    this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, 
+                    this.x, this.y + (this.size + topCurveHeight) / 2, 
+                    this.x, this.y + this.size
+                );
+                // Bottom right curve
+                ctx.bezierCurveTo(
+                    this.x, this.y + (this.size + topCurveHeight) / 2, 
+                    this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, 
+                    this.x + this.size / 2, this.y + topCurveHeight
+                );
+                // Top right curve
+                ctx.bezierCurveTo(
+                    this.x + this.size / 2, this.y, 
+                    this.x, this.y, 
+                    this.x, this.y + topCurveHeight
+                );
+                ctx.fill();
+            }
+        }
+
+        function initHearts() {
+            hearts = [];
+            for (let i = 0; i < heartCount; i++) {
+                hearts.push(new Heart());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        initHearts();
+        animate();
 
         function startExperience() {
             audio.play().catch(e => console.log("Audio play failed:", e));
