@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎂</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+
+        :root {
+            --bg-main: #F4E7E4;        /* Soft Blush */
+            --accent-primary: #E5989B; /* Coral Pink */
+            --ui-light: #FFEDF0;       /* Light Pink */
+            --text-charcoal: #454545;  /* Dark Gray */
+            --heading-white: #FDFCF0;  /* Off-white */
+            --shadow-soft: rgba(69, 69, 69, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-charcoal);
+        }
+
+        /* --- START OVERLAY (Enables Autoplay) --- */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-main);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px var(--shadow-soft);
+            max-width: 320px;
+            width: 90%;
+            border: 4px solid var(--ui-light);
+        }
+
+        .welcome-card h2 {
+            margin: 20px 0 10px;
+            font-size: 1.8rem;
+        }
+
+        .welcome-card p {
+            color: #888;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .start-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 10px 20px rgba(229, 152, 155, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .start-btn:active { transform: scale(0.95); }
+
+        /* --- MAIN CONTENT --- */
+        #main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            z-index: 10;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .shining-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            background: linear-gradient(to right, var(--accent-primary) 20%, var(--text-charcoal) 40%, var(--text-charcoal) 60%, var(--accent-primary) 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .instruction {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-primary);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- CARD STACK --- */
+        .stack {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .card {
+            position: absolute;
+            inset: 0;
+            background: white;
+            padding: 12px 12px 60px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2), opacity 0.5s;
+            user-select: none;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+            background: #eee;
+        }
+
+        .card-caption {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--text-charcoal);
+        }
+
+        /* Animation when card exits */
+        .card.exit {
+            transform: translate(150%, -20%) rotate(30deg) !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- BUTTONS --- */
+        .msg-btn {
+            background: var(--accent-primary);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(229, 152, 155, 0.2);
+            transition: 0.3s;
+        }
+
+        .msg-btn:hover { transform: translateY(-3px); }
+
+        .music-ctrl {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px var(--shadow-soft);
+            cursor: pointer;
+            z-index: 100;
+            border: none;
+            font-size: 1.2rem;
+        }
+
+        #confetti {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <!-- START OVERLAY -->
+    <div id="overlay">
+        <div class="welcome-card">
+            <div style="font-size: 3rem;">🎁</div>
+            <h2>A Surprise for You!</h2>
+            <p>I made something special. Tap the button below to see!</p>
+            <button class="start-btn" onclick="startApp()">Open Surprise</button>
+        </div>
+    </div>
+
+    <!-- BACKGROUND MUSIC -->
+    <!-- REPLACE THE URL BELOW WITH YOUR MP3 LINK -->
+    <audio id="bg-music" loop>
+        <source src="BirthdayBg.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-ctrl" id="music-toggle" onclick="toggleMusic()">🔊</button>
+
+    <!-- MAIN APP CONTENT -->
+    <div id="main-content">
+        <h1 class="shining-text">Happy Birthday! 🥳</h1>
+        <p class="instruction">Tap the photo to see more</p>
+
+        <div class="stack" id="card-stack" onclick="flipCard()">
+            <!-- The first card in HTML is the first one visible (Top) -->
+            <div class="card" style="z-index: 5;">
+                <img src="Pra3.png" alt="Card 1">
+                <div class="card-caption">Happy Birthday ^�!</div>
+            </div>
+            <div class="card" style="z-index: 4;">
+                <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=600" alt="Card 2">
+                <div class="card-caption">Best day ever</div>
+            </div>
+            <div class="card" style="z-index: 3;">
+                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=600" alt="Card 3">
+                <div class="card-caption">Party time!</div>
+            </div>
+            <div class="card" style="z-index: 2;">
+                <img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=600" alt="Card 4">
+                <div class="card-caption">Keep shining</div>
+            </div>
+            <div class="card" style="z-index: 1;">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600" alt="Card 5">
+                <div class="card-caption">Forever young</div>
+            </div>
+        </div>
+
+        <a href="Letter.html" class="msg-btn">Read My Message 💌</a>
+    </div>
+
+    <script>
+        const music = document.getElementById('bg-music');
+        const overlay = document.getElementById('overlay');
+        const content = document.getElementById('main-content');
+        const cards = document.querySelectorAll('.card');
+        const musicToggle = document.getElementById('music-toggle');
+        
+        let currentCardIndex = 0;
+
+        // Initialize card rotations
+        cards.forEach((card, i) => {
+            const rot = (i % 2 === 0 ? 1 : -1) * (i * 2);
+            card.style.transform = `rotate(${rot}deg)`;
+        });
+
+        // Start App and Play Music
+        function startApp() {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                content.classList.add('visible');
+            }, 800);
+
+            // Music Autoplay Trigger
+            music.play().catch(e => console.log("Audio blocked: " + e));
+        }
+
+        // Flip from Front logic
+        function flipCard() {
+            if (currentCardIndex < cards.length) {
+                cards[currentCardIndex].classList.add('exit');
+                currentCardIndex++;
+            } else {
+                // Reset if all cards flipped
+                currentCardIndex = 0;
+                cards.forEach((card, i) => {
+                    card.classList.remove('exit');
+                    const rot = (i % 2 === 0 ? 1 : -1) * (i * 2);
+                    card.style.transform = `rotate(${rot}deg)`;
+                });
+            }
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicToggle.innerText = '🔊';
+            } else {
+                music.pause();
+                musicToggle.innerText = '🔇';
+            }
+        }
+
+        // --- Simple Confetti Effect ---
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 6 + 2;
+                this.speed = Math.random() * 2 + 1;
+                this.color = ['#E5989B', '#FFEDF0', '#FDFCF0'][Math.floor(Math.random() * 3)];
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) this.y = -20;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
+
