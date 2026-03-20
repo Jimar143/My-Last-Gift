@@ -24,20 +24,19 @@
             color: var(--text);
             font-family: 'Inter', -apple-system, sans-serif;
             line-height: 1.8;
-            overflow: hidden; /* Locked until opened */
+            overflow: hidden; /* Naka-lock hanggang sa mabuksan */
         }
 
-        /* Entry Overlay (Necessary for Autoplay) */
+        /* Entry Overlay Styles - Katulad ng nasa picture */
         #overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--bg-main);
+            background-color: #F8EDED; 
             z-index: 9999;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             transition: opacity 1s ease, visibility 1s;
@@ -48,21 +47,63 @@
             visibility: hidden;
         }
 
-        .enter-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(229, 154, 143, 0.3);
-            transition: transform 0.3s;
+        .surprise-card {
+            background: white;
+            padding: 45px 35px;
+            border-radius: 40px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border: 8px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
-        .enter-btn:hover {
-            transform: scale(1.05);
-            background-color: #d48a7f;
+        .message-logo {
+            width: 70px;
+            height: 70px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .surprise-title {
+            font-size: 1.8rem;
+            color: #4A4A4A;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .surprise-text {
+            color: #8E8E8E;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            max-width: 260px;
+            line-height: 1.4;
+        }
+
+        .enter-btn {
+            background-color: #E59A8F;
+            color: white;
+            border: none;
+            padding: 16px 0;
+            width: 100%;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(229, 154, 143, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .enter-btn:active {
+            transform: scale(0.96);
         }
 
         /* Music Toggle Button */
@@ -88,7 +129,7 @@
         .wrapper {
             max-width: 700px;
             margin: 0 auto;
-            padding: 80px 20px;
+            padding: 60px 20px;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 1s ease 0.5s, transform 1s ease 0.5s;
@@ -101,27 +142,6 @@
 
         body.unlocked {
             overflow-y: auto;
-        }
-
-        /* Header Section */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        h1 {
-            font-family: 'Georgia', serif;
-            font-size: 2.5rem;
-            color: var(--accent);
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        .date {
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.8rem;
-            opacity: 0.6;
         }
 
         /* Music Player UI */
@@ -168,28 +188,7 @@
             white-space: pre-wrap;
             font-size: 1.1rem;
             text-align: justify;
-        }
-
-        .art-section {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 40px;
-            border-top: 1px solid var(--bg-main);
-        }
-
-        .portrait-placeholder {
-            width: 100%;
-            height: 300px;
-            background: var(--ui-soft);
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed var(--accent);
-            margin-top: 20px;
-            color: var(--accent);
-            padding: 20px;
+            color: #4A4A4A;
         }
 
         footer {
@@ -200,59 +199,61 @@
         }
 
         @media (max-width: 600px) {
-            .letter-content { padding: 30px; }
-            h1 { font-size: 1.8rem; }
+            .letter-content { padding: 35px 25px; }
+            .surprise-card { padding: 35px 25px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Enter Overlay-->
+    <!-- Enter Overlay - Message Icon na ang gamit -->
     <div id="overlay">
-        <h2 style="margin-bottom: 20px; opacity: 0.6; font-weight: 300; letter-spacing: 2px;">Open the Letter</h2>
-        <button class="enter-btn" onclick="startExperience()">Open<audio id="bgMusic" autoplay loop>
-    <source src="IkawAtAko.mp3" type="audio/mpeg">
-</audio></button>
+        <div class="surprise-card">
+            <div class="message-logo">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <h2 class="surprise-title">A Message for You!</h2>
+            <p class="surprise-text">I wrote something special just for you. Tap the button below to read it.</p>
+            <button class="enter-btn" onclick="startExperience()">Open Message</button>
+        </div>
+        
+        <audio id="bgMusic" loop>
+            <source src="IkawAtAko.mp3" type="audio/mpeg">
+        </audio>
     </div>
-
-    <!-- Background Music -->
-    <!-- REPLACE THE SRC LINK BELOW WITH THE ACTUAL AUDIO FILE URL -->
-   <!--<audio id="bgMusic" autoplay loop>
-    <source src="IkawAtAko.mp3" type="audio/mpeg">-->
-</audio>
 
     <button id="musicToggle" onclick="toggleMusic()">
         <svg id="musicIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
     </button>
 
     <div class="wrapper">
-      <!-- <header>
-        </header>-->
-
         <div class="music-card">
             <div class="music-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
             </div>
             <div class="music-info">
-                <p>Ikaw at Ako</p>
-                <span>TJ Monterde Memories of Us</span>
+                <p style="font-weight: 600;">Ikaw at Ako</p>
+                <span style="font-size: 0.85rem; color: #888;">TJ Monterde • Memories of Us</span>
             </div>
         </div>
 
         <main class="letter-content">
-            <div class="letter-text">Happy birthday my greatest love ^^, sorry kung dko na naman natupad yung pangako ko sayo🥺, gusto ko sana ibigay sayo sa personal yung ilang months kong ginawa na mga charcoal portrait, kaso di namin nagawang maging champion😞 , kaya gumawa nalang ako ng lifetime website na para sayo lang ^^ ikaw lang makaka access basta dmo mawawala yung link at ipapa open yung link sa iba😄, sana ma gustuhan mo ^^, its been 3 or 4 years na din pala simula nung wala na tayo. 
+            <div class="letter-text">Happy birthday my greatest love ^^, sorry kung dko na naman natupad yung pangako ko sayo🥺, gusto ko sana ibigay sayo sa personal yung ilang months kong ginawa na mga charcoal portrait, kaso di namin nagawang maging champion😞, kaya gumawa nalang ako ng lifetime website na para sayo lang ^^ ikaw lang makaka access basta dmo mawawala yung link at ipapa open yung link sa iba😄, sana ma gustuhan mo ^^, its been 3 or 4 years na din pala simula nung wala na tayo. 
 
 Every time I hear "Ikaw at Ako" by TJ Monterde, I can't help but think of you. It brings back so many memories, our laughter, those long conversation that felt like they could last forever.
 
-The song reminds me of how special you were to me and the moments we shared. Masaya ako na nakilala kita, not just a partner, but as someone who brought so much joy and inspection into my life. Eto na yung pinaka huling regalo ko sayo love ^^ , gusto ko sana mag paalam sayo sa personal for the last time bago ako pumunta sa Canada, kaso kahit binigay ko na best ko di parin kami nanalo, nung time na nakilala mo si Jastine, ay siya ba noon yung naging bf mo? sorry²😄 that time kase mas pinili kong ilayo sarili ko noon para dko kayo maabala😓 pero halo halo yung na ramdaman ko, nalungkot kase yung taong pinapasaya ko noon, may ibang taong nag papasaya na sa kanya^^, pero at the same time masaya kase atlist sa kanya mo naranasan yung mga gusto kong gawin pero dko na nagawa ^^, 1y mahigit kayo noe ^^ or counting pa? Dun palang alam kong talo nako HAHAHA, tinaggap ko nalang din that time na yung greatest love ko masaya na ^^ Sana matupad mo lahat ng pangarap mo ^^ cguro hanggang d2 nalang kwento nating dalawa, susuportahan parin naman kita ng palihin pero cguro di na mag paparamdam ^^, Hindi man ako yung pinaka the best person na nakilala mo sa buong buhay mo but I hope that one day when you hear my name you would just smile and say "I miss this person" ^^ 
+The song reminds me of how special you were to me and the moments we shared. Masaya ako na nakilala kita, not just a partner, but as someone who brought so much joy and inspection into my life. Eto na yung pinaka huling regalo ko sayo love ^^ , gusto ko sana mag paalam sayo sa personal for the last time bago ako pumunta sa Canada, kaso kahit binigay ko na best ko di parin kami nanalo, nung time na nakilala mo si Jastine, ay siya ba noon yung naging bf mo? sorry²😄 that time kase mas pinili kong ilayo sarili ko noon para dko kayo maabala😓 pero halo halo yung na ramdaman ko, nalungkot kase yung taong pinapasaya ko noon, may ibang taong nag papasaya na sa kanya^^, pero at the same time masaya kase atlist sa kanya mo naranasan yung mga gusto kong gawin pero dko na nagawa ^^, 1y mahigit kayo noe ^^ or counting pa? Dun palang alam kong talo nako HAHAHA, tinaggap ko nalang din that time na yung greatest love ko masaya na ^^ Sana matupad mo lahat ng pangarap mo ^^ cguro hanggang d2 nalang kwento nating dalawa, susuportahan parin naman kita ng palihin pero cguro di na mag paparamdam ^^, Hindi man ako yung pinaka the best person na nakilala mo sa buong buhay mo but I hope that one day when you hear my name you would just smile and say "I miss this person" ^^ 
 
-Sana kung pag tagpuin ulit tayo ng tadhana sana naging masaya na tayong dalawa ^^ Happy birthday ulit My greatest love.....Alam kong ilang beses ko nang sinasabi sayo noon na ilove you for the last time pero cguro eto na talaga yung last.
+Sana kung pag tagpuin ulit tayo ng tadhana sana naging masaya na tayong dalawa ^^ Happy birthday ulit My greatest love.....Alam kong ilang beses ko nang sinasabi sayo noon na ilove you for the last time pero cguro eto na talaga yung last.
 
-I love you love ^^ ingatan mo palagi sarili mo🥺</div>
-
+I love you love ^^ ingatan mo palagi sarili mo🥺</div>
         </main>
 
         <footer>
+            <p>&copy; 2026 • Always Supporting You</p>
         </footer>
     </div>
 
@@ -262,13 +263,8 @@ I love you love ^^ ingatan mo palagi sarili mo🥺</div>
         const body = document.body;
 
         function startExperience() {
-            // Play audio
             audio.play().catch(e => console.log("Audio play failed:", e));
-            
-            // Hide overlay
             overlay.classList.add('hidden');
-            
-            // Unlock body scroll and show content
             body.classList.add('unlocked');
         }
 
