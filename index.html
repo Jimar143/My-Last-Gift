@@ -68,13 +68,12 @@
             </div>
 
             <div class="btn">
-                <button id="btn__letter">
-                    <div class="mail">
-                        Click Here to See my Gift 🎁
-                        <!--<i class="fa-regular fa-envelope"></i>-->
-                    </div>
-                </button>
-            </div>
+    <button id="btn__letter" onclick="window.location.href='flipCard.html'">
+        <div class="mail">
+            Click Here to See my Gift 
+        </div>
+    </button>
+</div>
         </div>
 
         <!-- RIGHT SIDE -->
@@ -149,47 +148,6 @@
         <img src="./images/smiley_icon.png" width="100" alt="">
     </div>
 
-    <!-- MAIL BOX Change this 
-    <div class="boxMail">
-        <i class="fa-solid fa-xmark"></i>
-
-        <div class="boxMail-container">
-            <div class="card1">
-                <div class="userImg">
-                    <img src="images/unnamed.png" alt="">
-                </div>
-
-                <h4 class="username">
-                    To: MikMik 💖<span class="underline"></span>
-                </h4>
-
-                <h3>Happy Birthday</h3>
-
-                <div class="imageCute">
-                    <img src="cute1.png" alt="">
-                </div>
-            </div>
-
-            <div class="card2">
-                <div class="card2-content">
-                    <h3>To You!</h3>
-                    <h2>
-                        Happy birthday 🥳🎂🥳 to one of the most cheerful and funniest people I've ever met.💖
-                        if may problema ka syempre mas madami parin sakin Hahahah syempre di ako papatalo noe -_-
-                        de joke, I whish binati ka na ng jowa mo, pero kung hindi pa, ako nalang mauuna HAHAhaHAHh,
-                        salamat nanjan ka palagi para sakin kahit may problema ka din ^^,
-                        I am wishing you happy birthday 🎈🎂🎈. Don't be Sad ok be happy kahit sobrang dami
-                        nating problema 😌
-                    </h2>
-
-                    <div class="imageCute2">
-                        <img src="cute2.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
 </div>
 
 <script>
@@ -206,7 +164,6 @@
     let currentIndexTitle = 0;
 
     let date__of__birth = document.querySelector(".date__of__birth span");
-    let text__letter = document.querySelector(".text__letter p");
 
     setTimeout(function () {
         let timeDatetxt = setInterval(function () {
@@ -222,6 +179,8 @@
         }, 100);
     }, 12000);
 
+    // DISABLED CLICK (since redirect na)
+    /*
     let mailBox = document.querySelector('.mail');
     let boxmail = document.querySelector('.boxMail');
     let close = document.querySelector('.fa-xmark');
@@ -234,6 +193,7 @@
     close.onclick = function () {
         boxmail.classList.remove('active');
     };
+    */
 </script>
 
 </body>
