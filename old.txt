@@ -9,8 +9,8 @@
         :root {
             --accent: #E59A8F;
             --bg-color: #F8EDED;
-            --glass-white: rgba(255, 255, 255, 0.9);
-            --ios-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            --glass-white: rgba(255, 255, 255, 0.85); /* Mas opaque para madaling basahin */
+            --ios-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             --text-dark: #1D1D1F;
         }
 
@@ -31,6 +31,7 @@
             flex-direction: column;
         }
 
+        /* Mesh Background */
         .bg-mesh {
             position: fixed;
             inset: 0;
@@ -49,12 +50,13 @@
             opacity: 0.4;
         }
 
+        /* Overlay / Lock Screen */
         #overlay {
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(45px) saturate(180%);
-            -webkit-backdrop-filter: blur(45px) saturate(180%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -96,6 +98,7 @@
 
         .enter-btn:active { transform: scale(0.96); }
 
+        /* Main Layout */
         .wrapper {
             max-width: 600px;
             margin: 0 auto;
@@ -106,6 +109,7 @@
 
         body.unlocked .wrapper { opacity: 1; }
 
+        /* iOS Music Widget Style */
         .music-widget {
             background: var(--glass-white);
             backdrop-filter: blur(20px);
@@ -130,6 +134,7 @@
             color: white;
         }
 
+        /* Letter Bubble Style (iMessage like) */
         .letter-container {
             background: var(--glass-white);
             backdrop-filter: blur(20px);
@@ -144,18 +149,19 @@
         .letter-text {
             white-space: pre-wrap;
             font-size: 1.15rem;
-            line-height: 1.9;
+            line-height: 1.8;
             color: #333;
-            text-align: left;
+            text-align: left; /* Mas madaling basahin kesa justify */
         }
 
         strong { font-weight: 700; color: #000; }
         .song-title { color: #D87A6F; font-weight: 700; font-style: italic; }
 
+        /* Skip Button */
         #skipBtn {
             position: absolute;
-            bottom: -45px;
-            right: 10px;
+            bottom: -50px;
+            right: 0;
             background: none;
             border: none;
             color: var(--accent);
@@ -166,6 +172,9 @@
             display: none;
         }
 
+        #skipBtn:hover { opacity: 1; }
+
+        /* Floating Controls */
         #musicToggle {
             position: fixed;
             bottom: 25px;
@@ -193,8 +202,10 @@
             padding: 40px 0;
             font-size: 0.9rem;
             color: #888;
+            font-weight: 500;
         }
 
+        /* Typing Cursor */
         .cursor {
             display: inline-block;
             width: 2px;
@@ -207,12 +218,13 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         @media (max-width: 600px) {
-            .letter-container { padding: 35px 25px; }
+            .letter-container { padding: 30px 20px; }
             .letter-text { font-size: 1.05rem; }
+            .wrapper { padding-top: 40px; }
         }
     </style>
 </head>
-<body oncontextmenu="return false">
+<body oncontextmenu="return false"> <!-- Prevent right click for "private" feel -->
 
     <div class="bg-mesh"></div>
     <canvas id="heartCanvas"></canvas>
@@ -279,7 +291,7 @@ Hindi man ako yung pinaka-best na taong nakilala mo, but I hope one day when you
 
 I hope that if we meet again someday… I hope we’re both already happy ^^.
 
-Happy birthday ulit, <strong>Pra Prа</strong> ^^… Alam kong ilang beses ko nang sinabi sa’yo noon na “I love you for the last time", pero siguro eto na talaga yun.
+Happy birthday ulit, <strong>Pra Pra</strong> ^^… Alam kong ilang beses ko nang sinabi sa’yo noon na “I love you for the last time", pero siguro eto na talaga yun.
 
 I love you, love ^^ Ingatan mo palagi sarili mo 🥺`;
 
@@ -292,20 +304,19 @@ I love you, love ^^ Ingatan mo palagi sarili mo 🥺`;
         let isTyping = false;
 
         function start() {
-            audio.currentTime = 1; // Talong agad sa 1s para iwas dead air
             audio.play().catch(() => {});
             overlay.classList.add('hidden');
+            document.body.style.overflowY = "auto";
             document.body.classList.add('unlocked');
-            setTimeout(startTyping, 1200);
+            setTimeout(startTyping, 1000);
         }
 
         function startTyping() {
             isTyping = true;
             skipBtn.style.display = "block";
             let i = 0;
-            letterDiv.innerHTML = '<span id="content"></span><span class="cursor" id="cursor"></span>';
+            letterDiv.innerHTML = '<span id="content"></span><span class="cursor"></span>';
             const contentSpan = document.getElementById('content');
-            const cursor = document.getElementById('cursor');
 
             function type() {
                 if (i < message.length && isTyping) {
@@ -318,26 +329,15 @@ I love you, love ^^ Ingatan mo palagi sarili mo 🥺`;
                         i++;
                     }
                     
-                    // Human-like speed based on character type
-                    let speed = 65; // Base speed para sa normal reading
-                    const lastChar = message.charAt(i - 1);
-                    
-                    if (lastChar === '.' || lastChar === '?' || lastChar === '!') speed = 850; // Pause sa dulo ng sentence
-                    else if (lastChar === ',' || lastChar === '—') speed = 400; // Pause sa comma
-                    else if (lastChar === '🥺' || lastChar === '😞' || lastChar === '😄') speed = 1000; // Pause sa emojis
-                    else if (lastChar === '^') speed = 600; // Pause sa carets
-                    else if (lastChar === ' ') speed = 40; // Mas mabilis sa spaces para mag-flow ang words
+                    // Natural typing speed
+                    let speed = 30;
+                    if (message.charAt(i-1) === '.' || message.charAt(i-1) === '🥺' || message.charAt(i-1) === '^') speed = 500;
                     
                     typingTimeout = setTimeout(type, speed);
-                    
-                    // Auto-scroll logic para hindi mawala sa screen ang tinatype
-                    const scrollTarget = document.body.scrollHeight;
-                    if (window.scrollY + window.innerHeight < scrollTarget) {
-                        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-                    }
+                    // Auto scroll as it types
+                    window.scrollTo(0, document.body.scrollHeight);
                 } else {
-                    if (cursor) cursor.style.display = 'none';
-                    skipBtn.style.display = "none";
+                    skipTyping();
                 }
             }
             type();
@@ -403,7 +403,7 @@ I love you, love ^^ Ingatan mo palagi sarili mo 🥺`;
                 ctx.restore();
             }
         }
-        for(let i=0; i<18; i++) hearts.push(new Heart());
+        for(let i=0; i<20; i++) hearts.push(new Heart());
         function animate() {
             ctx.clearRect(0,0,canvas.width, canvas.height);
             hearts.forEach(h => { h.update(); h.draw(); });
