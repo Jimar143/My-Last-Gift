@@ -68,12 +68,12 @@
             </div>
 
             <div class="btn">
-    <button id="btn__letter" onclick="window.location.href='flipCard.html'">
-        <div class="mail">
-            Click Here to See my Gift 
-        </div>
-    </button>
-</div>
+                <button id="btn__letter" onclick="window.location.href='flipCard.html'">
+                    <div class="mail">
+                        Click Here to See my Gift 🎁
+                    </div>
+                </button>
+            </div>
         </div>
 
         <!-- RIGHT SIDE -->
@@ -150,6 +150,12 @@
 
 </div>
 
+<!-- Background Music Element -->
+<audio id="bgMusic" loop autoplay>
+    <source src="PraPraBackgroun.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
 <script>
     let datetxt = "May 14";
     let datatxtletter = "";
@@ -179,21 +185,23 @@
         }, 100);
     }, 12000);
 
-    // DISABLED CLICK (since redirect na)
-    /*
-    let mailBox = document.querySelector('.mail');
-    let boxmail = document.querySelector('.boxMail');
-    let close = document.querySelector('.fa-xmark');
+    // Logic to handle autoplay restrictions in modern browsers
+    document.addEventListener('click', function() {
+        const audio = document.getElementById('bgMusic');
+        if (audio.paused) {
+            audio.play().catch(error => {
+                console.log("Playback failed:", error);
+            });
+        }
+    }, { once: true }); // Runs only on the first click
 
-    mailBox.onclick = function () {
-        mailBox.classList.toggle('active');
-        boxmail.classList.add('active');
-    };
-
-    close.onclick = function () {
-        boxmail.classList.remove('active');
-    };
-    */
+    // Attempt to play on load (may be blocked by browser)
+    window.onload = function() {
+        const audio = document.getElementById('bgMusic');
+        audio.play().catch(() => {
+            console.log("Autoplay blocked. Waiting for user interaction.");
+        });
+    }
 </script>
 
 </body>
