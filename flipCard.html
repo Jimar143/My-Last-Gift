@@ -33,7 +33,7 @@
             color: var(--text-charcoal);
         }
 
-        /* --- START OVERLAY --- */
+        /* --- OVERLAY --- */
         #overlay {
             position: fixed;
             inset: 0;
@@ -71,8 +71,6 @@
             box-shadow: 0 10px 20px rgba(229, 152, 155, 0.3);
             transition: transform 0.2s;
         }
-
-        .start-btn:active { transform: scale(0.95); }
 
         /* --- MAIN CONTENT --- */
         #main-content {
@@ -138,19 +136,50 @@
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2), opacity 0.5s;
             user-select: none;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .card img, .card video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Eto ang sikreto para mawala ang black bars */
             border-radius: 2px;
-            background: #eee;
+            background: #000;
+        }
+
+        /* SPECIFIC ADJUSTMENTS FOR CARD 3 (Celebrate) */
+        #charcoal-card {
+            width: 340px;
+            aspect-ratio: 3968 / 2976;
+            height: auto;
+            left: 50%;
+            top: 50%;
+            margin-left: -170px;
+            margin-top: -150px;
+        }
+
+        /* SPECIFIC ADJUSTMENTS FOR LAST CARD (Video) */
+        #last-card {
+            width: 320px;
+            aspect-ratio: 1080 / 1438;
+            height: auto;
+            left: 50%;
+            top: 50%;
+            margin-left: -160px;
+            margin-top: -210px;
+            padding: 8px 8px 60px; /* Mas manipis na border para mas malaki ang video */
+        }
+
+        #last-card video {
+            object-fit: cover !important; /* Pinupuno ang buong space */
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .card-caption {
             position: absolute;
-            bottom: 15px;
+            bottom: 12px;
             left: 0;
             width: 100%;
             text-align: center;
@@ -228,33 +257,35 @@
 
         <div class="stack" id="card-stack" onclick="flipCard()">
             
-            <!-- 1st Card: PraPraVid1.mp4 -->
+            <!-- 1st Card -->
             <div class="card" style="z-index: 5;">
                 <video id="video-1" muted loop playsinline>
                     <source src="PraPraVid1.mp4" type="video/mp4">
-                    <!-- Fallback placeholder case file isn't found -->
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                 </video>
                 <div class="card-caption">Happy Birthday! 🎂</div>
             </div>
             
+            <!-- 2nd Card -->
             <div class="card" style="z-index: 4;">
                 <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=600" alt="Photo 2">
                 <div class="card-caption">Best day ever</div>
             </div>
             
-            <div class="card" style="z-index: 3;">
-                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=600" alt="Photo 3">
+            <!-- 3rd Card: Charcoal/Celebrate -->
+            <div class="card" id="charcoal-card" style="z-index: 3;">
+                <img src="charcoal1.jpg" alt="Photo 3">
                 <div class="card-caption">Celebrate! ✨</div>
             </div>
             
+            <!-- 4th Card -->
             <div class="card" style="z-index: 2;">
                 <img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=600" alt="Photo 4">
                 <div class="card-caption">Enjoy your day</div>
             </div>
 
-            <!-- 5th Card: PraPraVid1.mp4 (Or another video) -->
-            <div class="card" style="z-index: 1;">
+            <!-- 5th Card: Last Video -->
+            <div class="card" id="last-card" style="z-index: 1;">
                 <video id="video-5" muted loop playsinline>
                     <source src="PraPraVid2.mov" type="video/mp4">
                     <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
@@ -276,7 +307,7 @@
         
         let currentCardIndex = 0;
 
-        // Initialize rotations for realistic stack look
+        // Initialize rotations
         cards.forEach((card, i) => {
             const rot = (i % 2 === 0 ? 1 : -1) * (i * 2);
             card.style.transform = `rotate(${rot}deg)`;
@@ -287,30 +318,18 @@
             setTimeout(() => {
                 overlay.style.display = 'none';
                 content.classList.add('visible');
-                // Play the first video immediately
                 video1.play();
             }, 800);
-
-            music.play().catch(e => console.log("Audio waiting for interaction"));
+            music.play().catch(e => console.log("Audio waiting"));
         }
 
         function flipCard() {
             if (currentCardIndex < cards.length) {
-                // Pause first video when flipping it away
-                if (currentCardIndex === 0) {
-                    video1.pause();
-                }
-
+                if (currentCardIndex === 0) video1.pause();
                 cards[currentCardIndex].classList.add('exit');
-                
-                // Play the last video when it becomes visible (4 cards flipped)
-                if (currentCardIndex === cards.length - 2) {
-                    video5.play();
-                }
-
+                if (currentCardIndex === cards.length - 2) video5.play();
                 currentCardIndex++;
             } else {
-                // Reset to start
                 currentCardIndex = 0;
                 video5.pause();
                 video5.currentTime = 0;
@@ -330,7 +349,7 @@
             else { music.pause(); btn.innerText = '🔇'; }
         }
 
-        // --- Simple Confetti Effect ---
+        // Confetti
         const canvas = document.getElementById('confetti');
         const ctx = canvas.getContext('2d');
         let particles = [];

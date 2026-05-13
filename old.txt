@@ -1,412 +1,358 @@
 <!DOCTYPE html>
-<html lang="tl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To My Greatest Love</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Happy Birthday! 🎂</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+
         :root {
-            --accent: #E59A8F;
-            --bg-color: #F8EDED;
-            --glass-white: rgba(255, 255, 255, 0.85); /* Mas opaque para madaling basahin */
-            --ios-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            --text-dark: #1D1D1F;
+            --bg-main: #F4E7E4;
+            --accent-primary: #E5989B;
+            --ui-light: #FFEDF0;
+            --text-charcoal: #454545;
+            --shadow-soft: rgba(69, 69, 69, 0.12);
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
+            background-color: var(--bg-main);
+            font-family: 'Quicksand', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-charcoal);
         }
 
-        /* Mesh Background */
-        .bg-mesh {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            background: radial-gradient(at 0% 0%, #F4E7E4 0%, transparent 50%),
-                        radial-gradient(at 100% 0%, #FFCBD1 0%, transparent 50%),
-                        radial-gradient(at 50% 50%, #FFFFFF 0%, transparent 100%);
-            filter: blur(60px);
-        }
-
-        #heartCanvas {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        /* Overlay / Lock Screen */
+        /* --- START OVERLAY --- */
         #overlay {
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            z-index: 10000;
+            background: var(--bg-main);
+            z-index: 2000;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            transition: all 0.8s ease;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        #overlay.hidden {
+        .welcome-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px var(--shadow-soft);
+            max-width: 320px;
+            width: 90%;
+            border: 4px solid var(--ui-light);
+        }
+
+        .start-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(229, 152, 155, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .start-btn:active { transform: scale(0.95); }
+
+        /* --- MAIN CONTENT --- */
+        #main-content {
             opacity: 0;
-            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            z-index: 10;
+        }
+
+        #main-content.visible { opacity: 1; transform: translateY(0); }
+
+        .shining-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            background: linear-gradient(to right, var(--accent-primary) 20%, var(--text-charcoal) 40%, var(--text-charcoal) 60%, var(--accent-primary) 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .instruction {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-primary);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- CARD STACK --- */
+        .stack {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .card {
+            position: absolute;
+            inset: 0;
+            background: white;
+            padding: 12px 12px 60px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2), opacity 0.5s;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .card img, .card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+            background: #eee;
+        }
+
+        .card-caption {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--text-charcoal);
+            background: white;
+            padding-top: 5px;
+        }
+
+        .card.exit {
+            transform: translate(150%, -20%) rotate(30deg) !important;
+            opacity: 0;
             pointer-events: none;
         }
 
-        .intro-card {
-            background: var(--glass-white);
-            backdrop-filter: blur(20px);
-            border-radius: 35px;
-            padding: 40px 30px;
-            width: 85%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: var(--ios-shadow);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .enter-btn {
-            background: #1D1D1F;
+        .msg-btn {
+            background: var(--accent-primary);
             color: white;
-            border: none;
-            padding: 18px 0;
-            width: 100%;
-            border-radius: 20px;
-            font-size: 1.1rem;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.2s ease;
+            box-shadow: 0 10px 20px rgba(229, 152, 155, 0.2);
+            transition: 0.3s;
         }
 
-        .enter-btn:active { transform: scale(0.96); }
-
-        /* Main Layout */
-        .wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 80px 20px 40px;
-            opacity: 0;
-            transition: opacity 1s ease 0.5s;
-        }
-
-        body.unlocked .wrapper { opacity: 1; }
-
-        /* iOS Music Widget Style */
-        .music-widget {
-            background: var(--glass-white);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            box-shadow: var(--ios-shadow);
-            border: 1px solid white;
-        }
-
-        .album-art {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #E59A8F, #FFCBD1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        /* Letter Bubble Style (iMessage like) */
-        .letter-container {
-            background: var(--glass-white);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px 30px;
-            box-shadow: var(--ios-shadow);
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            position: relative;
-        }
-
-        .letter-text {
-            white-space: pre-wrap;
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: #333;
-            text-align: left; /* Mas madaling basahin kesa justify */
-        }
-
-        strong { font-weight: 700; color: #000; }
-        .song-title { color: #D87A6F; font-weight: 700; font-style: italic; }
-
-        /* Skip Button */
-        #skipBtn {
-            position: absolute;
-            bottom: -50px;
-            right: 0;
-            background: none;
-            border: none;
-            color: var(--accent);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            opacity: 0.7;
-            display: none;
-        }
-
-        #skipBtn:hover { opacity: 1; }
-
-        /* Floating Controls */
-        #musicToggle {
+        .music-ctrl {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 1000;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
             background: white;
-            width: 50px;
-            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px var(--shadow-soft);
             cursor: pointer;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.5s ease;
+            z-index: 100;
+            border: none;
         }
 
-        body.unlocked #musicToggle { visibility: visible; opacity: 1; }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            font-size: 0.9rem;
-            color: #888;
-            font-weight: 500;
-        }
-
-        /* Typing Cursor */
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.1em;
-            background: var(--accent);
-            margin-left: 2px;
-            vertical-align: middle;
-            animation: blink 0.8s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        @media (max-width: 600px) {
-            .letter-container { padding: 30px 20px; }
-            .letter-text { font-size: 1.05rem; }
-            .wrapper { padding-top: 40px; }
+        #confetti {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
         }
     </style>
 </head>
-<body oncontextmenu="return false"> <!-- Prevent right click for "private" feel -->
+<body>
 
-    <div class="bg-mesh"></div>
-    <canvas id="heartCanvas"></canvas>
+    <canvas id="confetti"></canvas>
 
     <div id="overlay">
-        <div class="intro-card">
-            <div style="font-size: 40px; margin-bottom: 10px;">✉️</div>
-            <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">A Message for You!</h2>
-            <p style="color: #666; font-size: 0.9rem; line-height: 1.4;">I wrote something special just for you. Tap the button below to read it.</p>
-            <button class="enter-btn" onclick="start()">Open Message</button>
+        <div class="welcome-card">
+            <div style="font-size: 3rem;">🎁</div>
+            <h2>A Surprise for You!</h2>
+            <p>I made something special. Tap the button below to see!</p>
+            <button class="start-btn" onclick="startApp()">Open Surprise</button>
         </div>
-        <audio id="bgMusic" loop>
-            <source src="IkawAtAko.mp3" type="audio/mpeg">
-        </audio>
     </div>
 
-    <button id="musicToggle" onclick="toggleMusic()">
-        <svg id="musicIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-    </button>
+    <audio id="bg-music" loop>
+        <source src="BirthdayBg.mp3" type="audio/mpeg">
+    </audio>
 
-    <div class="wrapper">
-        <div class="music-widget">
-            <div class="album-art">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    <button class="music-ctrl" id="music-toggle" onclick="toggleMusic()">🔊</button>
+
+    <div id="main-content">
+        <h1 class="shining-text">Happy Birthday! 🥳</h1>
+        <p class="instruction">Tap the card to see more</p>
+
+        <div class="stack" id="card-stack" onclick="flipCard()">
+            
+            <!-- 1st Card: PraPraVid1.mp4 -->
+            <div class="card" style="z-index: 5;">
+                <video id="video-1" muted loop playsinline>
+                    <source src="PraPraVid1.mp4" type="video/mp4">
+                    <!-- Fallback placeholder case file isn't found -->
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                </video>
+                <div class="card-caption">Happy Birthday! 🎂</div>
             </div>
-            <div style="flex: 1;">
-                <p style="font-weight: 700; font-size: 0.9rem; margin-bottom: 2px;">Ikaw at Ako</p>
-                <p style="font-size: 0.75rem; color: #888;">TJ Monterde • Memories of Us</p>
+            
+            <div class="card" style="z-index: 4;">
+                <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=600" alt="Photo 2">
+                <div class="card-caption">Best day ever</div>
+            </div>
+            
+            <div class="card" style="z-index: 3;">
+                <img src="charcoal1.jpg" alt="Photo 3">
+                <div class="card-caption">Celebrate! ✨</div>
+            </div>
+            
+            <div class="card" style="z-index: 2;">
+                <img src="https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=600" alt="Photo 4">
+                <div class="card-caption">Enjoy your day</div>
+            </div>
+
+            <!-- 5th Card: PraPraVid1.mp4 (Or another video) -->
+            <div class="card" style="z-index: 1;">
+                <video id="video-5" muted loop playsinline>
+                    <source src="PraPraVid2.mov" type="video/mp4">
+                    <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+                </video>
+                <div class="card-caption">Forever young ✨</div>
             </div>
         </div>
 
-        <main class="letter-container">
-            <div class="letter-text" id="letterText"></div>
-            <button id="skipBtn" onclick="skipTyping()">Show all text ↓</button>
-        </main>
-
-        <footer>
-            <p>@<span id="year"></span> • Always supporting you</p>
-        </footer>
+        <a href="Letter.html" class="msg-btn">Read My Message 💌</a>
     </div>
 
     <script>
-        const message = `Happy birthday, my greatest love ^^
-
-Sorry kung ‘di ko na naman natupad yung pangako ko sa’yo 🥺 Gusto ko sana ibigay sa’yo personally yung ilang months kong ginawa na charcoal portraits, pero hindi kami nanalo 😞 Kaya gumawa na lang ako ng lifetime website na para sa’yo lang ^^ Ikaw lang makaka-access basta ‘di mo mawawala yung link at ‘di mo ipapa open sa iba 😄 Sana magustuhan mo ^^.
-
-It’s been 3 or 4 years na rin pala since wala na tayo…
-
-Every time I hear <strong class="song-title">"Ikaw at Ako" by TJ Monterde</strong>, I can't help but think of you. It brings back so many memories, our laughter, those long conversation that felt like they could last forever.
-
-The song reminds me of how special you were to me and the moments we shared. Masaya ako na nakilala kita—not just as a partner, but as someone who brought so much joy and inspiration into my life.
-
-Eto na siguro yung pinaka huling regalo ko sa’yo, love ^^ Gusto ko sana magpaalam sa’yo in person for the last time bago ako pumunta sa Canada… pero kahit binigay ko na best ko, hindi pa rin kami nanalo😔. Ang dami ko sanang gustong sabihin sa’yo sa personal….pero mukhang hanggang dito na lang talaga😔
-
-Nung time na may nakilala kang iba, pinili kong ilayo muna yung sarili ko para hindi ako maging abala sainyo 😓 that time Halo-halo yung naramdaman ko—nalungkot, kasi yung taong pinapasaya ko dati, may iba nang nagpapasaya😄… pero at the same time, masaya rin ako, kasi alam kong may taong nandyan para ibigay sa’yo yung mga bagay na gusto ko sanang maibigay, pero hindi ko na nagawa^^
-
-1y Mahigit din kayo, noh? Dun pa lang alam kong mas better siya sakin HAHAHA. Kaya tinanggap ko na lang din that time na masaya kana ^^
-
-Sana matupad mo lahat ng pangarap mo^^. Siguro hanggang dito na lang talaga yung kwento nating dalawa. Susuportahan pa rin naman kita from afar, pero baka hindi na ako magpaparamdam.
-
-Sorry for not keeping my promise to you again 😞, and I’m really sorry for avoiding you. Sorry for everything I’ve done that hurt you or made things harder between us 🥺.
-
-Hindi man ako yung pinaka-best na taong nakilala mo, but I hope one day when you hear my name, mapapangiti ka na lang and say, <strong>“I miss this person.”</strong> ^^
-
-I hope that if we meet again someday… I hope we’re both already happy ^^.
-
-Happy birthday ulit, <strong>Pra Pra</strong> ^^… Alam kong ilang beses ko nang sinabi sa’yo noon na “I love you for the last time", pero siguro eto na talaga yun.
-
-I love you, love ^^ Ingatan mo palagi sarili mo 🥺`;
-
-        document.getElementById('year').textContent = new Date().getFullYear();
-        const audio = document.getElementById('bgMusic');
+        const music = document.getElementById('bg-music');
         const overlay = document.getElementById('overlay');
-        const letterDiv = document.getElementById('letterText');
-        const skipBtn = document.getElementById('skipBtn');
-        let typingTimeout;
-        let isTyping = false;
+        const content = document.getElementById('main-content');
+        const cards = document.querySelectorAll('.card');
+        const video1 = document.getElementById('video-1');
+        const video5 = document.getElementById('video-5');
+        
+        let currentCardIndex = 0;
 
-        function start() {
-            audio.play().catch(() => {});
-            overlay.classList.add('hidden');
-            document.body.style.overflowY = "auto";
-            document.body.classList.add('unlocked');
-            setTimeout(startTyping, 1000);
+        // Initialize rotations for realistic stack look
+        cards.forEach((card, i) => {
+            const rot = (i % 2 === 0 ? 1 : -1) * (i * 2);
+            card.style.transform = `rotate(${rot}deg)`;
+        });
+
+        function startApp() {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                content.classList.add('visible');
+                // Play the first video immediately
+                video1.play();
+            }, 800);
+
+            music.play().catch(e => console.log("Audio waiting for interaction"));
         }
 
-        function startTyping() {
-            isTyping = true;
-            skipBtn.style.display = "block";
-            let i = 0;
-            letterDiv.innerHTML = '<span id="content"></span><span class="cursor"></span>';
-            const contentSpan = document.getElementById('content');
-
-            function type() {
-                if (i < message.length && isTyping) {
-                    if (message.slice(i, i + 1) === '<') {
-                        let tagEnd = message.indexOf('>', i);
-                        contentSpan.innerHTML += message.slice(i, tagEnd + 1);
-                        i = tagEnd + 1;
-                    } else {
-                        contentSpan.innerHTML += message.charAt(i);
-                        i++;
-                    }
-                    
-                    // Natural typing speed
-                    let speed = 30;
-                    if (message.charAt(i-1) === '.' || message.charAt(i-1) === '🥺' || message.charAt(i-1) === '^') speed = 500;
-                    
-                    typingTimeout = setTimeout(type, speed);
-                    // Auto scroll as it types
-                    window.scrollTo(0, document.body.scrollHeight);
-                } else {
-                    skipTyping();
+        function flipCard() {
+            if (currentCardIndex < cards.length) {
+                // Pause first video when flipping it away
+                if (currentCardIndex === 0) {
+                    video1.pause();
                 }
-            }
-            type();
-        }
 
-        function skipTyping() {
-            isTyping = false;
-            clearTimeout(typingTimeout);
-            letterDiv.innerHTML = message;
-            skipBtn.style.display = "none";
+                cards[currentCardIndex].classList.add('exit');
+                
+                // Play the last video when it becomes visible (4 cards flipped)
+                if (currentCardIndex === cards.length - 2) {
+                    video5.play();
+                }
+
+                currentCardIndex++;
+            } else {
+                // Reset to start
+                currentCardIndex = 0;
+                video5.pause();
+                video5.currentTime = 0;
+                cards.forEach((card, i) => {
+                    card.classList.remove('exit');
+                    const rot = (i % 2 === 0 ? 1 : -1) * (i * 2);
+                    card.style.transform = `rotate(${rot}deg)`;
+                });
+                video1.currentTime = 0;
+                video1.play();
+            }
         }
 
         function toggleMusic() {
-            const icon = document.getElementById('musicIcon');
-            if (audio.paused) {
-                audio.play();
-                icon.innerHTML = '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>';
-            } else {
-                audio.pause();
-                icon.innerHTML = '<path d="M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73L19.73 21 21 19.73 4.27 3zM14 7h4V3h-6v5.18l2 2V7z"/>';
-            }
+            const btn = document.getElementById('music-toggle');
+            if (music.paused) { music.play(); btn.innerText = '🔊'; }
+            else { music.pause(); btn.innerText = '🔇'; }
         }
 
-        // Heart Background Logic
-        const canvas = document.getElementById('heartCanvas');
+        // --- Simple Confetti Effect ---
+        const canvas = document.getElementById('confetti');
         const ctx = canvas.getContext('2d');
-        let hearts = [];
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
 
-        class Heart {
-            constructor() { this.reset(); }
-            reset() {
+        class Particle {
+            constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 50;
-                this.size = Math.random() * 8 + 4;
-                this.speed = Math.random() * 0.5 + 0.2;
-                this.opacity = Math.random() * 0.3 + 0.1;
-                this.swing = Math.random() * 2;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 6 + 2;
+                this.speed = Math.random() * 2 + 1;
+                this.color = ['#E5989B', '#FFEDF0', '#FDFCF0'][Math.floor(Math.random() * 3)];
             }
-            update() {
-                this.y -= this.speed;
-                this.swing += 0.01;
-                if (this.y < -50) this.reset();
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = '#E59A8F';
-                const x = this.x + Math.sin(this.swing) * 10;
-                const s = this.size;
-                ctx.beginPath();
-                ctx.moveTo(x, this.y);
-                ctx.bezierCurveTo(x, this.y-s/2, x-s, this.y-s/2, x-s, this.y);
-                ctx.bezierCurveTo(x-s, this.y+s/2, x, this.y+s, x, this.y+s*1.2);
-                ctx.bezierCurveTo(x, this.y+s, x+s, this.y+s/2, x+s, this.y);
-                ctx.bezierCurveTo(x+s, this.y-s/2, x, this.y-s/2, x, this.y);
-                ctx.fill();
-                ctx.restore();
-            }
+            update() { this.y += this.speed; if (this.y > canvas.height) this.y = -20; }
+            draw() { ctx.fillStyle = this.color; ctx.fillRect(this.x, this.y, this.size, this.size); }
         }
-        for(let i=0; i<20; i++) hearts.push(new Heart());
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
         function animate() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            hearts.forEach(h => { h.update(); h.draw(); });
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animate);
         }
         animate();
