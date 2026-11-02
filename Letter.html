@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To My Greatest Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --accent: #E59A8F;
@@ -207,12 +209,20 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         @media (max-width: 600px) {
+            .wrapper { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
             .letter-container { padding: 35px 25px; }
             .letter-text { font-size: 1.05rem; }
+            #musicToggle { bottom: calc(82px + env(safe-area-inset-bottom)); }
         }
     </style>
 </head>
 <body oncontextmenu="return false">
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+        <a href="flipCard.html"><i class="fa-solid fa-gift" aria-hidden="true"></i><span>Gift</span></a>
+        <a href="Letter.html" aria-current="page"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span>Letter</span></a>
+    </nav>
 
     <div class="bg-mesh"></div>
     <canvas id="heartCanvas"></canvas>

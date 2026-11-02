@@ -25,11 +25,12 @@
         body {
             background-color: var(--bg-main);
             font-family: 'Quicksand', sans-serif;
-            min-height: 100vh;
+            min-height: 100svh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             color: var(--text-charcoal);
         }
 
@@ -230,9 +231,41 @@
             pointer-events: none;
             z-index: 5;
         }
+
+        @media (max-width: 700px) {
+            #main-content {
+                padding: 20px 0 calc(92px + env(safe-area-inset-bottom));
+            }
+
+            .stack {
+                transform: scale(0.9);
+            }
+
+            #charcoal-card {
+                width: min(340px, calc(100vw - 64px));
+                margin-left: max(-170px, calc(32px - 50vw));
+            }
+
+            #last-card {
+                width: min(320px, calc(100vw - 64px));
+                margin-left: max(-160px, calc(32px - 50vw));
+            }
+
+            .music-ctrl {
+                bottom: calc(82px + env(safe-area-inset-bottom));
+            }
+        }
     </style>
+    <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+        <a href="flipCard.html" aria-current="page"><i class="fa-solid fa-gift" aria-hidden="true"></i><span>Gift</span></a>
+        <a href="Letter.html"><i class="fa-solid fa-envelope" aria-hidden="true"></i><span>Letter</span></a>
+    </nav>
 
     <canvas id="confetti"></canvas>
 
