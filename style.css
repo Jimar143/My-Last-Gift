@@ -630,7 +630,18 @@ body {
 
 
 
-@media screen and (max-width: 658px)   {
+@media screen and (max-width: 700px)   {
+
+    body {
+        height: auto;
+        min-height: 100%;
+    }
+
+    #wrapper {
+        height: auto;
+        min-height: 100vh;
+        padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    }
 
     .flag__birthday .flag__left {
         transform: rotate(-10deg) translate(-119px,3px);
